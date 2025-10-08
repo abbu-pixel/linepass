@@ -1,22 +1,58 @@
-<!-- templates/index.html -->
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Iris Flower Predictor</title>
+    <meta charset="UTF-8">
+    <title>Iris Flower Prediction 🌸</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f5f9;
+            text-align: center;
+            padding: 40px;
+        }
+        form {
+            background: white;
+            padding: 25px;
+            display: inline-block;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+        input {
+            margin: 8px;
+            padding: 8px;
+            width: 80%;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        h2 { color: #333; }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #007BFF;
+        }
+    </style>
 </head>
 <body>
-    <h1>Iris Flower Prediction</h1>
-    <form method="post">
-        {% for feature in features %}
-            <label>{{ feature }}:</label><br>
-            <input type="number" step="any" name="{{ feature }}" required><br><br>
-        {% endfor %}
+    <h2>Iris Flower Prediction 🌸</h2>
+    <form action="/predict" method="post">
+        <input type="number" name="sepal_length" step="any" placeholder="Sepal Length (cm)" required><br>
+        <input type="number" name="sepal_width" step="any" placeholder="Sepal Width (cm)" required><br>
+        <input type="number" name="petal_length" step="any" placeholder="Petal Length (cm)" required><br>
+        <input type="number" name="petal_width" step="any" placeholder="Petal Width (cm)" required><br>
         <button type="submit">Predict</button>
     </form>
 
-    {% if prediction %}
-        <h2>Predicted Class: {{ prediction }}</h2>
+    {% if result %}
+        <div class="result">{{ result }}</div>
     {% endif %}
 </body>
 </html>

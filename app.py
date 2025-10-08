@@ -1,29 +1,32 @@
 # app.py
-
 from flask import Flask, render_template, request
-import joblib
-import pandas as pd
+import pickle
+import numpy as np
 
 app = Flask(__name__)
 
-# Load model and features
-model = joblib.load("iris_model.pkl")
-features = joblib.load("iris_features.pkl")
-target_map = {0: "Setosa", 1: "Versicolor", 2: "Virginica"}
+# Load trained model
+with open("model.pkl", "rb") as f:
+    model = pickle.load(f)
 
-@app.route("/", methods=["GET", "POST"])
-def index():
-    prediction = None
-    if request.method == "POST":
-        # Get input from form
-        input_data = [float(request.form[feature]) for feature in features]
-        df = pd.DataFrame([input_data], columns=features)
+# Define class names
+class_names = ["Setosa", "Versicolor", "Virginica"]
 
-        # Predict
-        pred_class = model.predict(df)[0]
-        prediction = target_map[pred_class]
+@app.route("/")
+def home():
+    return render_template("index.html")
 
-    return render_template("index.html", features=features, prediction=prediction)
+@app.route("/predict", methods=["POST"])
+def predict():
+    try:
+        # Get input values from form
+        features = [float(x) for x in request.form.values()]
+        features = np.array([features])
+        prediction = model.predict(features)[0]
+        predicted_class = class_names[prediction]
+        return render_template("index.html", result=f"Predicted Species: {predicted_class}")
+    except Exception as e:
+        return render_template("index.html", result=f"Error: {str(e)}")
 
 if __name__ == "__main__":
     app.run(debug=True)
